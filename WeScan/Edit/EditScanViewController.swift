@@ -31,7 +31,7 @@ final class EditScanViewController: UIViewController {
     }()
     
     private lazy var nextButton: UIBarButtonItem = {
-        let title = NSLocalizedString("wescan.edit.button.next", tableName: nil, bundle: Bundle(for: EditScanViewController.self), value: "Next", comment: "A generic next button")
+        let title = NSLocalizedString("wescan.edit.button.next", tableName: nil, bundle: Bundle(for: EditScanViewController.self), value: "Done", comment: "A generic next button")
         let button = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(pushReviewController))
         button.tintColor = navigationController?.navigationBar.tintColor
         return button
@@ -102,6 +102,9 @@ final class EditScanViewController: UIViewController {
     }
     
     // MARK: - Setups
+    func hideNavigationController(isHidden: Bool) {
+        navigationController?.isNavigationBarHidden = isHidden
+    }
     
     private func setupViews() {
         view.addSubview(imageView)

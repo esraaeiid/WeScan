@@ -102,9 +102,6 @@ final class EditScanViewController: UIViewController {
     }
     
     // MARK: - Setups
-    func hideNavigationController(isHidden: Bool) {
-        navigationController?.isNavigationBarHidden = isHidden
-    }
     
     private func setupViews() {
         view.addSubview(imageView)

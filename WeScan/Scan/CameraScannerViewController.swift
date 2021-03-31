@@ -20,6 +20,8 @@ public protocol CameraScannerViewOutputDelegate: class {
 /// The `CameraScannerViewController` class is individual camera view include touch for focus, flash control, capture control and auto detect rectangle shape of object.
 public final class CameraScannerViewController: UIViewController {
 
+    /// called when a paper is detected, instead of making the session manger public
+    var onDocumentDetected: (() -> ())?
     /// The status of auto scan.
     public var isAutoScanEnabled: Bool = CaptureSession.current.isAutoScanEnabled {
         didSet {
@@ -180,6 +182,7 @@ extension CameraScannerViewController: RectangleDetectionDelegateProtocol {
             quadView.removeQuadrilateral()
             return
         }
+        onDocumentDetected?()
         
         let portraitImageSize = CGSize(width: imageSize.height, height: imageSize.width)
         let scaleTransform = CGAffineTransform.scaleTransform(forSize: portraitImageSize, aspectFillInSize: quadView.bounds.size)

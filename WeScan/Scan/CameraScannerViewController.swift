@@ -21,7 +21,7 @@ public protocol CameraScannerViewOutputDelegate: class {
 public final class CameraScannerViewController: UIViewController {
 
     /// called when a paper is detected, instead of making the session manger public
-    var onDocumentDetected: (() -> ())?
+    public var onDocumentDetected: (() -> ())?
     /// The status of auto scan.
     public var isAutoScanEnabled: Bool = CaptureSession.current.isAutoScanEnabled {
         didSet {

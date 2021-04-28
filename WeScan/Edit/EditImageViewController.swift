@@ -13,6 +13,7 @@ import AVFoundation
 public protocol EditImageViewDelegate: class {
     /// A method that your delegate object must implement to get cropped image.
     func cropped(image: UIImage)
+    func didStartDragging()
 }
 
 /// A view controller that manages edit image for scanning documents or pick image from photo library
@@ -69,7 +70,7 @@ public final class EditImageViewController: UIViewController {
         setupViews()
         setupConstraints()
         zoomGestureController = ZoomGestureController(image: image, quadView: quadView)
-        addLongGesture(of: zoomGestureController)
+        addLongGesture()
     }
     
     override public func viewDidLayoutSubviews() {
@@ -106,9 +107,9 @@ public final class EditImageViewController: UIViewController {
         NSLayoutConstraint.activate(quadViewConstraints + imageViewConstraints)
     }
     
-    private func addLongGesture(of controller: ZoomGestureController) {
-        let touchDown = UILongPressGestureRecognizer(target: controller,
-                                                     action: #selector(controller.handle(pan:)))
+    private func addLongGesture() {
+        let touchDown = UILongPressGestureRecognizer(target: self,
+                                                     action: #selector(handle(pan:)))
         touchDown.minimumPressDuration = 0
         view.addGestureRecognizer(touchDown)
     }
@@ -140,6 +141,11 @@ public final class EditImageViewController: UIViewController {
         delegate?.cropped(image: croppedImage)
     }
     
+    @objc func handle(pan: UIGestureRecognizer)  {
+        zoomGestureController.handle(pan: pan)
+        delegate?.didStartDragging()
+    }
+    
     /// This function allow user to rotate image by 90 degree each and will reload image on image view.
     public func rotateImage() {
         let rotationAngle = Measurement<UnitAngle>(value: 90, unit: .degrees)
@@ -157,7 +163,7 @@ public final class EditImageViewController: UIViewController {
         displayQuad()
         
         zoomGestureController = ZoomGestureController(image: image, quadView: quadView)
-        addLongGesture(of: zoomGestureController)
+        addLongGesture()
     }
     
     private func displayQuad() {

@@ -23,8 +23,8 @@ final class QuadrilateralView: UIView {
     
     private let quadLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
-        layer.strokeColor = UIColor.white.cgColor
-        layer.lineWidth = 1.0
+        layer.strokeColor = UIColor.clear.cgColor
+        layer.lineWidth = 3.0
         layer.opacity = 1.0
         layer.isHidden = true
         
@@ -36,6 +36,8 @@ final class QuadrilateralView: UIView {
     private let quadView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.clear
+        view.layer.borderColor = UIColor.clear.cgColor
+        view.layer.borderWidth = 4
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()

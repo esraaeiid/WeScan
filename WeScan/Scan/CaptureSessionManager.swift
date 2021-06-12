@@ -157,17 +157,37 @@ final class CaptureSessionManager: NSObject, AVCaptureVideoDataOutputSampleBuffe
         captureSession.stopRunning()
     }
     
-    internal func capturePhoto() {
+    internal func capturePhoto(flashMode: AVCaptureDevice.FlashMode) {
         guard let connection = photoOutput.connection(with: .video), connection.isEnabled, connection.isActive else {
             let error = ImageScannerControllerError.capture
             delegate?.captureSessionManager(self, didFailWithError: error)
             return
         }
         CaptureSession.current.setImageOrientation()
-        let photoSettings = AVCapturePhotoSettings()
+     
+        guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return }
+        //AVCapturePhotoSettings object is unique and cannot be reused, so you need to get new settings every time wh changing flash mode
+        let photoSettings = getSettings(camera: device, flashMode: flashMode)
+//        let photoSettings = AVCapturePhotoSettings()
         photoSettings.isHighResolutionPhotoEnabled = true
         photoSettings.isAutoStillImageStabilizationEnabled = true
         photoOutput.capturePhoto(with: photoSettings, delegate: self)
+    }
+    
+    
+    /// Get settings
+    ///
+    /// - Parameters:
+    ///   - camera: the camera
+    ///   - flashMode: the current flash mode
+    /// - Returns: AVCapturePhotoSettings
+    private func getSettings(camera: AVCaptureDevice, flashMode: AVCaptureDevice.FlashMode) -> AVCapturePhotoSettings {
+        let settings = AVCapturePhotoSettings()
+
+        if camera.hasFlash {
+            settings.flashMode = flashMode
+        }
+        return settings
     }
     
     // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
@@ -205,7 +225,7 @@ final class CaptureSessionManager: NSObject, AVCaptureVideoDataOutputSampleBuffe
                 let shouldAutoScan = (result == .showAndAutoScan)
                 strongSelf.displayRectangleResult(rectangleResult: RectangleDetectorResult(rectangle: rectangle, imageSize: imageSize))
                 if shouldAutoScan, CaptureSession.current.isAutoScanEnabled, !CaptureSession.current.isEditing {
-                    capturePhoto()
+                    capturePhoto(flashMode: .off)
                 }
             }
             

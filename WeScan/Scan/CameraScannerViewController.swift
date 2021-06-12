@@ -138,8 +138,8 @@ public final class CameraScannerViewController: UIViewController {
         }
     }
     
-    public func capture() {
-        captureSessionManager?.capturePhoto()
+    public func capture(flashMode: AVCaptureDevice.FlashMode) {
+        captureSessionManager?.capturePhoto(flashMode: flashMode)
     }
     
     public func toggleFlash() {

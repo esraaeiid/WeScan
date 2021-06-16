@@ -34,7 +34,7 @@ final class NewCameraViewController: UIViewController {
     }
     
     @IBAction func captureTapped(_ sender: UIButton) {
-        controller.capture()
+        controller.capture(flashMode: .off)
     }
 
 }

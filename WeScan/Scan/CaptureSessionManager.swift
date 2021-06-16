@@ -25,7 +25,9 @@ protocol RectangleDetectionDelegateProtocol: NSObjectProtocol {
     ///   - captureSessionManager: The `CaptureSessionManager` instance that has detected a quadrilateral.
     ///   - quad: The detected quadrilateral in the coordinates of the image.
     ///   - imageSize: The size of the image the quadrilateral has been detected on.
-    func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didDetectQuad quad: Quadrilateral?, _ imageSize: CGSize)
+    func captureSessionManager(_ captureSessionManager: CaptureSessionManager,
+                               flashMode: AVCaptureDevice.FlashMode,
+                               didDetectQuad quad: Quadrilateral?, _ imageSize: CGSize)
     
     /// Called when a picture with or without a quadrilateral has been captured.
     ///
@@ -33,13 +35,16 @@ protocol RectangleDetectionDelegateProtocol: NSObjectProtocol {
     ///   - captureSessionManager: The `CaptureSessionManager` instance that has captured a picture.
     ///   - picture: The picture that has been captured.
     ///   - quad: The quadrilateral that was detected in the picture's coordinates if any.
-    func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didCapturePicture picture: UIImage, withQuad quad: Quadrilateral?)
+    func captureSessionManager(_ captureSessionManager: CaptureSessionManager,
+                               flashMode: AVCaptureDevice.FlashMode,
+                               didCapturePicture picture: UIImage, withQuad quad: Quadrilateral?)
     
     /// Called when an error occured with the capture session manager.
     /// - Parameters:
     ///   - captureSessionManager: The `CaptureSessionManager` that encountered an error.
     ///   - error: The encountered error.
-    func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didFailWithError error: Error)
+    func captureSessionManager(_ captureSessionManager: CaptureSessionManager,
+                               didFailWithError error: Error)
 }
 
 /// The CaptureSessionManager is responsible for setting up and managing the AVCaptureSession and the functions related to capturing.
@@ -95,7 +100,7 @@ final class CaptureSessionManager: NSObject, AVCaptureVideoDataOutputSampleBuffe
             captureSession.canAddOutput(photoOutput),
             captureSession.canAddOutput(videoOutput) else {
                 let error = ImageScannerControllerError.inputDevice
-                delegate?.captureSessionManager(self, didFailWithError: error)
+            delegate?.captureSessionManager(self, didFailWithError: error)
                 return
         }
         
@@ -168,7 +173,6 @@ final class CaptureSessionManager: NSObject, AVCaptureVideoDataOutputSampleBuffe
         guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return }
         //AVCapturePhotoSettings object is unique and cannot be reused, so you need to get new settings every time wh changing flash mode
         let photoSettings = getSettings(camera: device, flashMode: flashMode)
-//        let photoSettings = AVCapturePhotoSettings()
         photoSettings.isHighResolutionPhotoEnabled = true
         photoSettings.isAutoStillImageStabilizationEnabled = true
         photoOutput.capturePhoto(with: photoSettings, delegate: self)
@@ -243,7 +247,7 @@ final class CaptureSessionManager: NSObject, AVCaptureVideoDataOutputSampleBuffe
                     
                     // Remove the currently displayed rectangle as no rectangles are being found anymore
                     strongSelf.displayedRectangleResult = nil
-                    strongSelf.delegate?.captureSessionManager(strongSelf, didDetectQuad: nil, imageSize)
+                    strongSelf.delegate?.captureSessionManager(strongSelf, flashMode: .off, didDetectQuad: nil, imageSize)
                 }
             }
             return
@@ -261,7 +265,7 @@ final class CaptureSessionManager: NSObject, AVCaptureVideoDataOutputSampleBuffe
                 return
             }
             
-            strongSelf.delegate?.captureSessionManager(strongSelf, didDetectQuad: quad, rectangleResult.imageSize)
+            strongSelf.delegate?.captureSessionManager(strongSelf, flashMode: .off, didDetectQuad: quad, rectangleResult.imageSize)
         }
         
         return quad
@@ -283,7 +287,8 @@ extension CaptureSessionManager: AVCapturePhotoCaptureDelegate {
         delegate?.didStartCapturingPicture(for: self)
         
         if let sampleBuffer = photoSampleBuffer,
-            let imageData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: sampleBuffer, previewPhotoSampleBuffer: nil) {
+            let imageData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: sampleBuffer,
+                                                                             previewPhotoSampleBuffer: nil) {
             completeImageCapture(with: imageData)
         } else {
             let error = ImageScannerControllerError.capture
@@ -350,7 +355,7 @@ extension CaptureSessionManager: AVCapturePhotoCaptureDelegate {
                 guard let strongSelf = self else {
                     return
                 }
-                strongSelf.delegate?.captureSessionManager(strongSelf, didCapturePicture: image, withQuad: quad)
+                strongSelf.delegate?.captureSessionManager(strongSelf, flashMode: .off, didCapturePicture: image, withQuad: quad)
             }
         }
     }

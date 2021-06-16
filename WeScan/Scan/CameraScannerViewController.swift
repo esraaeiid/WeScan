@@ -160,7 +160,8 @@ public final class CameraScannerViewController: UIViewController {
 }
 
 extension CameraScannerViewController: RectangleDetectionDelegateProtocol {
-    func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didFailWithError error: Error) {
+    func captureSessionManager(_ captureSessionManager: CaptureSessionManager,
+                               didFailWithError error: Error) {
         delegate?.captureImageFailWithError(error: error)
     }
     
@@ -169,12 +170,14 @@ extension CameraScannerViewController: RectangleDetectionDelegateProtocol {
     }
     
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager,
+                               flashMode: AVCaptureDevice.FlashMode,
                                didCapturePicture picture: UIImage,
                                withQuad quad: Quadrilateral?) {
         delegate?.captureImageSuccess(image: picture, withQuad: quad)
     }
     
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager,
+                               flashMode: AVCaptureDevice.FlashMode,
                                didDetectQuad quad: Quadrilateral?,
                                _ imageSize: CGSize) {
         guard let quad = quad else {

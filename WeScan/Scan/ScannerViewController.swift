@@ -272,14 +272,16 @@ public final class ScannerViewController: UIViewController {
 }
 
 extension ScannerViewController: RectangleDetectionDelegateProtocol {
-    func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didFailWithError error: Error) {
-        
+    func captureSessionManager(_ captureSessionManager: CaptureSessionManager,
+                               didFailWithError error: Error) {
+
         activityIndicator.stopAnimating()
         shutterButton.isUserInteractionEnabled = true
         
         guard let imageScannerController = navigationController as? ImageScannerController else { return }
         imageScannerController.imageScannerDelegate?.imageScannerController(imageScannerController, didFailWithError: error)
     }
+
     
     func didStartCapturingPicture(for captureSessionManager: CaptureSessionManager) {
         activityIndicator.startAnimating()
@@ -287,7 +289,10 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         shutterButton.isUserInteractionEnabled = false
     }
     
-    func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didCapturePicture picture: UIImage, withQuad quad: Quadrilateral?) {
+   
+        
+    func captureSessionManager(_ captureSessionManager: CaptureSessionManager, flashMode: AVCaptureDevice.FlashMode,
+                               didCapturePicture picture: UIImage, withQuad quad: Quadrilateral?) {
         activityIndicator.stopAnimating()
         
         let editVC = EditScanViewController(image: picture, quad: quad)
@@ -296,7 +301,8 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         shutterButton.isUserInteractionEnabled = true
     }
     
-    func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didDetectQuad quad: Quadrilateral?, _ imageSize: CGSize) {
+    func captureSessionManager(_ captureSessionManager: CaptureSessionManager, flashMode: AVCaptureDevice.FlashMode,
+                               didDetectQuad quad: Quadrilateral?, _ imageSize: CGSize) {
         guard let quad = quad else {
             // If no quad has been detected, we remove the currently displayed on on the quadView.
             quadView.removeQuadrilateral()

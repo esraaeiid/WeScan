@@ -8,6 +8,7 @@
 
 import UIKit
 import WeScan
+import AVFoundation
 
 final class NewCameraViewController: UIViewController {
     
@@ -44,11 +45,12 @@ extension NewCameraViewController: CameraScannerViewOutputDelegate {
         print(error)
     }
     
-    func captureImageSuccess(image: UIImage, withQuad quad: Quadrilateral?) {
+    func captureImageSuccess(image: UIImage, withQuad quad: Quadrilateral?, withFlashMode: AVCaptureDevice.FlashMode) {
         guard let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewEditImageView") as? EditImageViewController else { return }
         controller.modalPresentationStyle = .fullScreen
         controller.captureImage = image
         controller.quad = quad
         navigationController?.pushViewController(controller, animated: false)
     }
+    
 }

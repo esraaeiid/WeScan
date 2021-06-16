@@ -13,7 +13,7 @@ import AVFoundation
 /// If camera module doesn't work it will send error back to your delegate object.
 public protocol CameraScannerViewOutputDelegate: class {
     func captureImageFailWithError(error: Error)
-    func captureImageSuccess(image: UIImage, withQuad quad: Quadrilateral?)
+    func captureImageSuccess(image: UIImage, withQuad quad: Quadrilateral?, withFlashMode: AVCaptureDevice.FlashMode)
 }
 
 /// A view controller that manages the camera module and auto capture of rectangle shape of document
@@ -173,7 +173,7 @@ extension CameraScannerViewController: RectangleDetectionDelegateProtocol {
                                flashMode: AVCaptureDevice.FlashMode,
                                didCapturePicture picture: UIImage,
                                withQuad quad: Quadrilateral?) {
-        delegate?.captureImageSuccess(image: picture, withQuad: quad)
+        delegate?.captureImageSuccess(image: picture, withQuad: quad, withFlashMode: flashMode)
     }
     
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager,

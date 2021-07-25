@@ -26,6 +26,20 @@ public struct Quadrilateral: Transformable {
     
     /// A point that specifies the bottom left corner of the quadrilateral.
     public var bottomLeft: CGPoint
+    
+    
+    /// A point that specifies the top center of the quadrilateral.
+    public var topCenter: CGPoint
+    
+    /// A point that specifies the right center of the quadrilateral.
+    public var rightCenter: CGPoint
+    
+    /// A point that specifies the bottom center of the quadrilateral.
+    public var bottomCenter: CGPoint
+    
+    /// A point that specifies the left center of the quadrilateral.
+    public var leftCenter: CGPoint
+    
 
     public var description: String {
         return "topLeft: \(topLeft), topRight: \(topRight), bottomRight: \(bottomRight), bottomLeft: \(bottomLeft)"
@@ -54,6 +68,11 @@ public struct Quadrilateral: Transformable {
         self.topRight = rectangleFeature.topRight
         self.bottomLeft = rectangleFeature.bottomLeft
         self.bottomRight = rectangleFeature.bottomRight
+        
+        self.topCenter = topLeft.midBetween(otherPoint: topRight)
+        self.bottomCenter = bottomRight.midBetween(otherPoint: bottomLeft)
+        self.leftCenter = bottomLeft.midBetween(otherPoint: topLeft)
+        self.rightCenter = topRight.midBetween(otherPoint: bottomRight)
     }
 
     @available(iOS 11.0, *)
@@ -62,6 +81,11 @@ public struct Quadrilateral: Transformable {
         self.topRight = rectangleObservation.topRight
         self.bottomLeft = rectangleObservation.bottomLeft
         self.bottomRight = rectangleObservation.bottomRight
+        
+        self.topCenter = topLeft.midBetween(otherPoint: topRight)
+        self.bottomCenter = bottomRight.midBetween(otherPoint: bottomLeft)
+        self.leftCenter = bottomLeft.midBetween(otherPoint: topLeft)
+        self.rightCenter = topRight.midBetween(otherPoint: bottomRight)
     }
 
     init(topLeft: CGPoint, topRight: CGPoint, bottomRight: CGPoint, bottomLeft: CGPoint) {
@@ -69,6 +93,11 @@ public struct Quadrilateral: Transformable {
         self.topRight = topRight
         self.bottomRight = bottomRight
         self.bottomLeft = bottomLeft
+        
+        self.topCenter = topLeft.midBetween(otherPoint: topRight)
+        self.bottomCenter = bottomRight.midBetween(otherPoint: bottomLeft)
+        self.leftCenter = bottomLeft.midBetween(otherPoint: topLeft)
+        self.rightCenter = topRight.midBetween(otherPoint: bottomRight)
     }
     
     /// Applies a `CGAffineTransform` to the quadrilateral.
@@ -77,7 +106,10 @@ public struct Quadrilateral: Transformable {
     ///   - t: the transform to apply.
     /// - Returns: The transformed quadrilateral.
     func applying(_ transform: CGAffineTransform) -> Quadrilateral {
-        let quadrilateral = Quadrilateral(topLeft: topLeft.applying(transform), topRight: topRight.applying(transform), bottomRight: bottomRight.applying(transform), bottomLeft: bottomLeft.applying(transform))
+        let quadrilateral = Quadrilateral(topLeft: topLeft.applying(transform),
+                                          topRight: topRight.applying(transform),
+                                          bottomRight: bottomRight.applying(transform),
+                                          bottomLeft: bottomLeft.applying(transform))
         
         return quadrilateral
     }

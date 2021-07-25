@@ -31,6 +31,7 @@ enum CIRectangleDetector {
         guard let rectangleFeatures = rectangleDetector?.features(in: image) as? [CIRectangleFeature] else {
             return nil
         }
+     
         
         let quads = rectangleFeatures.map { rectangle in
             return Quadrilateral(rectangleFeature: rectangle)

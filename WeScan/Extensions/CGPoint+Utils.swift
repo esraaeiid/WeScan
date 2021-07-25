@@ -43,6 +43,13 @@ extension CGPoint {
     func distanceTo(point: CGPoint) -> CGFloat {
         return hypot((self.x - point.x), (self.y - point.y))
     }
+        
+    func midBetween(otherPoint: CGPoint) -> CGPoint {
+       return CGPoint(x: (self.x + otherPoint.x) / 2.0,
+                      y: (self.y + otherPoint.y) / 2.0)
+     }
+    
+    
     
     /// Returns the closest corner from the point
     func closestCornerFrom(quad: Quadrilateral) -> CornerPosition {
@@ -65,6 +72,13 @@ extension CGPoint {
         }
         
         return closestCorner
+    }
+    
+    
+    /// Returns the center point
+    func centerPointFrom(quad: Quadrilateral) -> CenterPosition {
+        //calculate center
+        return .topCenter
     }
     
 }

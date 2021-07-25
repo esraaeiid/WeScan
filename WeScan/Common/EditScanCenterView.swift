@@ -1,18 +1,19 @@
 //
-//  EditScanCornerView.swift
+//  EditScanCenterView.swift
 //  WeScan
 //
-//  Created by Boris Emorine on 3/5/18.
-//  Copyright © 2018 WeTransfer. All rights reserved.
+//  Created by Esraa Eid on 24/07/2021.
+//  Copyright © 2021 WeTransfer. All rights reserved.
 //
+
 
 import UIKit
 import CoreImage
 
 /// A UIView used by corners of a quadrilateral that is aware of its position.
-final class EditScanCornerView: UIView {
+final class EditScanCenterView: UIView {
     
-    let position: CornerPosition
+    let position: CenterPosition
     
     /// The image to display when the corner view is highlighted.
     private var image: UIImage?
@@ -20,7 +21,7 @@ final class EditScanCornerView: UIView {
     
     private lazy var circleLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
-        layer.fillColor = UIColor.clear.cgColor
+        layer.fillColor = UIColor.white.cgColor
         layer.strokeColor = UIColor.white.cgColor
         layer.lineWidth = 1.0
         return layer
@@ -33,7 +34,7 @@ final class EditScanCornerView: UIView {
         }
     }
     
-    init(frame: CGRect, position: CornerPosition) {
+    init(frame: CGRect, position: CenterPosition) {
         self.position = position
         super.init(frame: frame)
         backgroundColor = UIColor.clear
@@ -47,7 +48,7 @@ final class EditScanCornerView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        layer.cornerRadius = bounds.width / 2.0
+        layer.cornerRadius = 6.0
     }
     
     override func draw(_ rect: CGRect) {

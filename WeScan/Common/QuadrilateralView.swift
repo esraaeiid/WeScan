@@ -18,18 +18,28 @@ enum CornerPosition {
     case bottomLeft
 }
 
+/// Simple enum to keep track of the position of the centers of a quadrilateral.
+enum CenterPosition {
+    case topCenter
+    case bottomCenter
+    case rightCenter
+    case leftCenter
+}
+
+
 /// The `QuadrilateralView` is a simple `UIView` subclass that can draw a quadrilateral, and optionally edit it.
 final class QuadrilateralView: UIView {
     
     private let quadLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
-        layer.strokeColor = UIColor.clear.cgColor
+        layer.strokeColor = UIColor.white.cgColor
+        layer.fillColor = UIColor.clear.cgColor
         layer.lineWidth = 3.0
         layer.opacity = 1.0
         layer.isHidden = true
-        
         return layer
     }()
+    
     
     /// We want the corner views to be displayed under the outline of the quadrilateral.
     /// Because of that, we need the quadrilateral to be drawn on a UIView above them.
@@ -48,12 +58,13 @@ final class QuadrilateralView: UIView {
     public var editable = false {
         didSet {
             cornerViews(hidden: !editable)
-            quadLayer.fillColor = editable ? UIColor(white: 0.0, alpha: 0.6).cgColor : UIColor(white: 1.0, alpha: 0.5).cgColor
+            quadLayer.fillColor = editable ? UIColor(white: 1.0, alpha: 0.5).cgColor : UIColor.clear.cgColor
             guard let quad = quad else {
                 return
             }
             drawQuad(quad, animated: false)
             layoutCornerViews(forQuad: quad)
+            layoutCenterViews(forQuad: quad)
         }
     }
 
@@ -73,8 +84,8 @@ final class QuadrilateralView: UIView {
             guard oldValue != isHighlighted else {
                 return
             }
-            quadLayer.fillColor = isHighlighted ? UIColor.clear.cgColor : UIColor(white: 0.0, alpha: 0.6).cgColor
-            isHighlighted ? bringSubviewToFront(quadView) : sendSubviewToBack(quadView)
+            quadLayer.fillColor = isHighlighted ?  UIColor(white: 1.0, alpha: 0.5).cgColor : UIColor.clear.cgColor
+            isHighlighted ?  bringSubviewToFront(quadView) : sendSubviewToBack(quadView)
         }
     }
     
@@ -89,13 +100,35 @@ final class QuadrilateralView: UIView {
     private lazy var bottomRightCornerView: EditScanCornerView = {
         return EditScanCornerView(frame: CGRect(origin: .zero, size: cornerViewSize), position: .bottomRight)
     }()
-    
+
     private lazy var bottomLeftCornerView: EditScanCornerView = {
         return EditScanCornerView(frame: CGRect(origin: .zero, size: cornerViewSize), position: .bottomLeft)
     }()
     
     private let highlightedCornerViewSize = CGSize(width: 75.0, height: 75.0)
     private let cornerViewSize = CGSize(width: 20.0, height: 20.0)
+    
+    
+    
+    //Center Views
+    
+    private lazy var topCenterView: EditScanCenterView = {
+        return EditScanCenterView(frame: CGRect(origin: .zero, size: centerViewSize), position: .topCenter)
+    }()
+    
+    private lazy var bottomCenterView: EditScanCenterView = {
+        return EditScanCenterView(frame: CGRect(origin: .zero, size: centerViewSize), position: .bottomCenter)
+    }()
+    
+    private lazy var leftCenterView: EditScanCenterView = {
+        return EditScanCenterView(frame: CGRect(origin: .zero, size: centerViewSize), position: .leftCenter)
+    }()
+    
+    private lazy var rightCenterView: EditScanCenterView = {
+        return EditScanCenterView(frame: CGRect(origin: .zero, size: centerViewSize), position: .rightCenter)
+    }()
+    
+    private let centerViewSize = CGSize(width: 11.0, height: 22.0)
     
     // MARK: - Life Cycle
     
@@ -111,6 +144,7 @@ final class QuadrilateralView: UIView {
     private func commonInit() {
         addSubview(quadView)
         setupCornerViews()
+        setupCenterViews()
         setupConstraints()
         quadView.layer.addSublayer(quadLayer)
     }
@@ -133,6 +167,13 @@ final class QuadrilateralView: UIView {
         addSubview(bottomLeftCornerView)
     }
     
+    private func setupCenterViews() {
+        addSubview(topCenterView)
+        addSubview(bottomCenterView)
+        addSubview(rightCenterView)
+        addSubview(leftCenterView)
+    }
+    
     override public func layoutSubviews() {
         super.layoutSubviews()
         guard quadLayer.frame != bounds else {
@@ -143,6 +184,7 @@ final class QuadrilateralView: UIView {
         if let quad = quad {
             drawQuadrilateral(quad: quad, animated: false)
         }
+        
     }
     
     // MARK: - Drawings
@@ -157,6 +199,7 @@ final class QuadrilateralView: UIView {
         if editable {
             cornerViews(hidden: false)
             layoutCornerViews(forQuad: quad)
+            layoutCenterViews(forQuad: quad)
         }
     }
     
@@ -184,6 +227,13 @@ final class QuadrilateralView: UIView {
         topRightCornerView.center = quad.topRight
         bottomLeftCornerView.center = quad.bottomLeft
         bottomRightCornerView.center = quad.bottomRight
+    }
+    
+    private func layoutCenterViews(forQuad quad: Quadrilateral) {
+        topCenterView.center = quad.topCenter
+        bottomCenterView.center = quad.bottomCenter
+        leftCenterView.center = quad.leftCenter
+        rightCenterView.center = quad.rightCenter
     }
     
     func removeQuadrilateral() {
@@ -225,9 +275,27 @@ final class QuadrilateralView: UIView {
         cornerView.highlightWithImage(image)
     }
     
+    
+    func highlightCenterAtPosition(position: CenterPosition) {
+        guard editable else {
+            return
+        }
+        isHighlighted = true
+        
+        let cornerView = centerViewForCenterPositionBetween(position: position)
+        guard cornerView.isHighlighted == false else {
+            return
+        }
+
+        let origin = CGPoint(x: cornerView.frame.origin.x,
+                             y: cornerView.frame.origin.y)
+        cornerView.frame = CGRect(origin: origin, size: centerViewSize)
+    }
+    
     func resetHighlightedCornerViews() {
         isHighlighted = false
-        resetHighlightedCornerViews(cornerViews: [topLeftCornerView, topRightCornerView, bottomLeftCornerView, bottomRightCornerView])
+        resetHighlightedCornerViews(cornerViews: [topLeftCornerView, topRightCornerView,
+                                                  bottomLeftCornerView, bottomRightCornerView])
     }
     
     private func resetHighlightedCornerViews(cornerViews: [EditScanCornerView]) {
@@ -309,4 +377,19 @@ final class QuadrilateralView: UIView {
             return bottomRightCornerView
         }
     }
+    
+    
+    func centerViewForCenterPositionBetween(position: CenterPosition) -> EditScanCenterView {
+        switch position {
+        case .topCenter:
+            return topCenterView
+        case .bottomCenter:
+            return bottomCenterView
+        case .leftCenter:
+            return leftCenterView
+        case .rightCenter:
+            return rightCenterView
+        }
+    }
+    
 }

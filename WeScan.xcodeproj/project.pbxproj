@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1035A86C26AC501100488B78 /* EditScanCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1035A86B26AC501100488B78 /* EditScanCenterView.swift */; };
 		362967782294C23700B9FC4A /* CGImagePropertyOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362967772294C23700B9FC4A /* CGImagePropertyOrientation.swift */; };
 		382D0B0323C348A800A81619 /* CameraScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382D0B0223C348A800A81619 /* CameraScannerViewController.swift */; };
 		383C440E23C5846B0070DE47 /* EditImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383C440D23C5846B0070DE47 /* EditImageViewController.swift */; };
@@ -190,6 +191,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1035A86B26AC501100488B78 /* EditScanCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditScanCenterView.swift; sourceTree = "<group>"; };
 		362967772294C23700B9FC4A /* CGImagePropertyOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGImagePropertyOrientation.swift; sourceTree = "<group>"; };
 		382D0B0223C348A800A81619 /* CameraScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraScannerViewController.swift; sourceTree = "<group>"; };
 		383C440D23C5846B0070DE47 /* EditImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditImageViewController.swift; sourceTree = "<group>"; };
@@ -504,6 +506,7 @@
 				A1F22E98202C7B66001723AD /* QuadrilateralView.swift */,
 				A11C5B9B2046A20C005075FE /* Error.swift */,
 				A14089B9204D92EA0009530F /* EditScanCornerView.swift */,
+				1035A86B26AC501100488B78 /* EditScanCenterView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -895,6 +898,7 @@
 				A1F22E99202C7B66001723AD /* QuadrilateralView.swift in Sources */,
 				A194E97220431DD7003493E2 /* ReviewViewController.swift in Sources */,
 				B940E3DA21AE2919003B3C0B /* CaptureSession.swift in Sources */,
+				1035A86C26AC501100488B78 /* EditScanCenterView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

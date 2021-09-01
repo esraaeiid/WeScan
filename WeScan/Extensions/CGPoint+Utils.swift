@@ -74,11 +74,4 @@ extension CGPoint {
         return closestCorner
     }
     
-    
-    /// Returns the center point
-    func centerPointFrom(quad: Quadrilateral) -> CenterPosition {
-        //calculate center
-        return .topCenter
-    }
-    
 }

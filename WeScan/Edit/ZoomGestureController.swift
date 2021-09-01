@@ -16,7 +16,6 @@ final class ZoomGestureController {
     private let quadView: QuadrilateralView
     private var previousPanPosition: CGPoint?
     private var closestCorner: CornerPosition?
-    private var closestCenter: CenterPosition?
 
     init(image: UIImage, quadView: QuadrilateralView) {
         self.image = image
@@ -40,7 +39,6 @@ final class ZoomGestureController {
         let previousPanPosition = self.previousPanPosition ?? position
         let closestCorner = self.closestCorner ?? position.closestCornerFrom(quad: drawnQuad)
         
-        let closestCenter = self.closestCenter ?? position.centerPointFrom(quad: drawnQuad)
         
         let offset = CGAffineTransform(translationX: position.x - previousPanPosition.x, y: position.y - previousPanPosition.y)
         let cornerView = quadView.cornerViewForCornerPosition(position: closestCorner)
@@ -52,7 +50,6 @@ final class ZoomGestureController {
         
         self.previousPanPosition = position
         self.closestCorner = closestCorner
-        self.closestCenter = closestCenter
         
         let scale = image.size.width / quadView.bounds.size.width
         let scaledDraggedCornerViewCenter = CGPoint(x: draggedCornerViewCenter.x * scale, y: draggedCornerViewCenter.y * scale)
@@ -61,7 +58,6 @@ final class ZoomGestureController {
         }
         
         quadView.highlightCornerAtPosition(position: closestCorner, with: zoomedImage)
-        quadView.highlightCenterAtPosition(position: closestCenter)
     }
     
 }

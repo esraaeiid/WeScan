@@ -41,6 +41,10 @@ final class NewCameraViewController: UIViewController {
 }
 
 extension NewCameraViewController: CameraScannerViewOutputDelegate {
+    func didStartCapturingImage() {
+        print("didStartCapturingImage")
+    }
+    
     func captureImageFailWithError(error: Error) {
         print(error)
     }

@@ -14,6 +14,7 @@ import AVFoundation
 public protocol CameraScannerViewOutputDelegate: class {
     func captureImageFailWithError(error: Error)
     func captureImageSuccess(image: UIImage, withQuad quad: Quadrilateral?, withFlashMode: AVCaptureDevice.FlashMode)
+    func didStartCapturingImage()
 }
 
 /// A view controller that manages the camera module and auto capture of rectangle shape of document
@@ -166,6 +167,7 @@ extension CameraScannerViewController: RectangleDetectionDelegateProtocol {
     }
     
     func didStartCapturingPicture(for captureSessionManager: CaptureSessionManager) {
+        delegate?.didStartCapturingImage()
         captureSessionManager.stop()
     }
     

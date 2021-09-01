@@ -283,6 +283,7 @@ final class QuadrilateralView: UIView {
         isHighlighted = true
         
         let cornerView = centerViewForCenterPositionBetween(position: position)
+        
         guard cornerView.isHighlighted == false else {
             return
         }

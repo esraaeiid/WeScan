@@ -20,8 +20,9 @@ final class ReviewViewController: UIViewController {
         imageView.clipsToBounds = true
         imageView.isOpaque = true
         imageView.image = results.croppedScan.image
-        imageView.backgroundColor = .black
+        imageView.backgroundColor = .green
         imageView.contentMode = .scaleAspectFit
+        
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

@@ -146,6 +146,10 @@ final class CaptureSessionManager: NSObject, AVCaptureVideoDataOutputSampleBuffe
                 self.captureSession.startRunning()
             }
             isDetecting = true
+            
+   
+
+            
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: { (_) in
                 DispatchQueue.main.async { [weak self] in

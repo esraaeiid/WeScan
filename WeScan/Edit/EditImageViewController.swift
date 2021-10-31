@@ -36,7 +36,7 @@ public final class EditImageViewController: UIViewController {
         imageView.isOpaque = true
         imageView.image = image
         imageView.backgroundColor = .black
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -199,7 +199,7 @@ public final class EditImageViewController: UIViewController {
     }
 
     /// Generates a `Quadrilateral` object that's cover all of image.
-    private static func defaultQuad(allOfImage image: UIImage, withOffset offset: CGFloat = 75) -> Quadrilateral {
+    private static func defaultQuad(allOfImage image: UIImage, withOffset offset: CGFloat = 100) -> Quadrilateral {
         let topLeft = CGPoint(x: offset, y: offset)
         let topRight = CGPoint(x: image.size.width - offset, y: offset)
         let bottomRight = CGPoint(x: image.size.width - offset, y: image.size.height - offset)

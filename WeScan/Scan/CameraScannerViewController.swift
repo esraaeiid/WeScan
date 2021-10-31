@@ -194,7 +194,9 @@ extension CameraScannerViewController: RectangleDetectionDelegateProtocol {
         let scaledImageSize = imageSize.applying(scaleTransform)
         let rotationTransform = CGAffineTransform(rotationAngle: CGFloat.pi / 2.0)
         let imageBounds = CGRect(origin: .zero, size: scaledImageSize).applying(rotationTransform)
-        let translationTransform = CGAffineTransform.translateTransform(fromCenterOfRect: imageBounds, toCenterOfRect: quadView.bounds)
+        let translationTransform = CGAffineTransform.translateTransform(fromCenterOfRect: imageBounds,
+                                                                        
+                                                                        toCenterOfRect: quadView.bounds)
         let transforms = [scaleTransform, rotationTransform, translationTransform]
         let transformedQuad = quad.applyTransforms(transforms)
         quadView.drawQuadrilateral(quad: transformedQuad, animated: true)

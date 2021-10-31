@@ -37,7 +37,7 @@ final class NewCameraViewController: UIViewController {
     @IBAction func captureTapped(_ sender: UIButton) {
         controller.capture(flashMode: .off)
     }
-
+    
 }
 
 extension NewCameraViewController: CameraScannerViewOutputDelegate {
@@ -49,11 +49,13 @@ extension NewCameraViewController: CameraScannerViewOutputDelegate {
         print(error)
     }
     
-    func captureImageSuccess(image: UIImage, withQuad quad: Quadrilateral?, withFlashMode: AVCaptureDevice.FlashMode) {
+    func captureImageSuccess(image: UIImage, withQuad quad: Quadrilateral?,
+                             withFlashMode: AVCaptureDevice.FlashMode) {
         guard let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewEditImageView") as? EditImageViewController else { return }
         controller.modalPresentationStyle = .fullScreen
         controller.captureImage = image
         controller.quad = quad
+        print("🍟", quad)
         navigationController?.pushViewController(controller, animated: false)
     }
     

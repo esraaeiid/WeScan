@@ -53,7 +53,7 @@ final class ZoomGestureController {
         
         let scale = image.size.width / quadView.bounds.size.width
         let scaledDraggedCornerViewCenter = CGPoint(x: draggedCornerViewCenter.x * scale, y: draggedCornerViewCenter.y * scale)
-        guard let zoomedImage = image.scaledImage(atPoint: scaledDraggedCornerViewCenter, scaleFactor: 2.5, targetSize: quadView.bounds.size) else {
+        guard let zoomedImage = UIImage().scaledImage(atPoint: scaledDraggedCornerViewCenter, scaleFactor: 2.5, targetSize: quadView.bounds.size) else { //disabled image from being zoomed at corner views 
             return
         }
         

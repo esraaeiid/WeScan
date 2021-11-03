@@ -46,7 +46,7 @@ final class QuadrilateralView: UIView {
     public var editable = false {
         didSet {
             cornerViews(hidden: !editable)
-            quadLayer.fillColor = editable ? UIColor(white: 0.0, alpha: 0.6).cgColor : UIColor(white: 1.0, alpha: 0.5).cgColor
+            quadLayer.fillColor = editable ? UIColor.clear.cgColor : UIColor(white: 1.0, alpha: 0.5).cgColor
             guard let quad = quad else {
                 return
             }
@@ -164,7 +164,7 @@ final class QuadrilateralView: UIView {
         if editable {
             path = path.reversing()
             let rectPath = UIBezierPath(rect: bounds)
-            path.append(rectPath)
+//            path.append(rectPath)
         }
         
         if animated == true {
@@ -172,8 +172,10 @@ final class QuadrilateralView: UIView {
             pathAnimation.duration = 0.2
             quadLayer.add(pathAnimation, forKey: "path")
         }
-        
         quadLayer.path = path.cgPath
+        
+//        quadLayer.presentation()?.path?.boundingBoxOfPath
+        
         quadLayer.isHidden = false
     }
     

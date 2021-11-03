@@ -46,6 +46,7 @@ extension EditImageViewController: EditImageViewDelegate {
     }
     
     func didStartDragging() {
+        
     }
     
 }

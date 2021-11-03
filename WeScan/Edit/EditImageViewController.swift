@@ -12,7 +12,7 @@ import AVFoundation
 /// A protocol that your delegate object will get results of EditImageViewController.
 public protocol EditImageViewDelegate: class {
     /// A method that your delegate object must implement to get cropped image.
-    func cropped(image: UIImage)
+    func cropped(image: UIImage, quad: Quadrilateral)
     func didStartDragging()
 }
 
@@ -138,7 +138,7 @@ public final class EditImageViewController: UIViewController {
         ])
 
         let croppedImage = UIImage.from(ciImage: filteredImage)
-        delegate?.cropped(image: croppedImage)
+        delegate?.cropped(image: croppedImage, quad: self.quad)
     }
     
     @objc func handle(pan: UIGestureRecognizer)  {

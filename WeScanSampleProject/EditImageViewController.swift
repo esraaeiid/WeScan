@@ -37,13 +37,15 @@ final class EditImageViewController: UIViewController {
 }
 
 extension EditImageViewController: EditImageViewDelegate {
-    func didStartDragging() {
-    }
     
-    func cropped(image: UIImage) {
+    func cropped(image: UIImage, quad: Quadrilateral) {
         guard let controller = self.storyboard?.instantiateViewController(withIdentifier: "ReviewImageView") as? ReviewImageViewController else { return }
         controller.modalPresentationStyle = .fullScreen
         controller.image = image
         navigationController?.pushViewController(controller, animated: false)
     }
+    
+    func didStartDragging() {
+    }
+    
 }

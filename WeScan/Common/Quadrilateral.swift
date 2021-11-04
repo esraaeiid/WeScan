@@ -53,7 +53,6 @@ public struct Quadrilateral: Transformable {
         path.addLine(to: bottomRight)
         path.addLine(to: bottomLeft)
         path.close()
-
         return path
     }
 

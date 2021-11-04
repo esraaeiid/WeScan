@@ -55,7 +55,6 @@ extension NewCameraViewController: CameraScannerViewOutputDelegate {
         controller.modalPresentationStyle = .fullScreen
         controller.captureImage = image
         controller.quad = quad
-        print("🍟", quad)
         navigationController?.pushViewController(controller, animated: false)
     }
     

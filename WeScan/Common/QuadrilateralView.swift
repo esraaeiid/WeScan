@@ -21,13 +21,19 @@ enum CornerPosition {
 /// The `QuadrilateralView` is a simple `UIView` subclass that can draw a quadrilateral, and optionally edit it.
 final class QuadrilateralView: UIView {
     
+    
+    var isQuadMoving: Bool = false {
+        didSet  {
+            quadLayer.fillColor = isQuadMoving ? UIColor.clear.cgColor : UIColor(white: 0.0, alpha: 0.6).cgColor
+        }
+    }
+    
     private let quadLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
         layer.strokeColor = UIColor.white.cgColor
         layer.lineWidth = 3.0
         layer.opacity = 1.0
         layer.isHidden = true
-        
         return layer
     }()
     
@@ -162,10 +168,15 @@ final class QuadrilateralView: UIView {
         var path = quad.path
         
         if editable {
+            isQuadMoving = false
             path = path.reversing()
-            let rectPath = UIBezierPath(rect: bounds)
-//            path.append(rectPath)
+            let rectPath = UIBezierPath(rect: CGRect(x: bounds.minX - 10,
+                                                     y: bounds.minY - 100,
+                                                     width: bounds.width + 100,
+                                                     height: bounds.height + 200))
+            path.append(rectPath)
         }
+     
         
         if animated == true {
             let pathAnimation = CABasicAnimation(keyPath: "path")
@@ -173,7 +184,8 @@ final class QuadrilateralView: UIView {
             quadLayer.add(pathAnimation, forKey: "path")
         }
         quadLayer.path = path.cgPath
-        
+
+
 //        quadLayer.presentation()?.path?.boundingBoxOfPath
         
         quadLayer.isHidden = false

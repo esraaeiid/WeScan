@@ -31,8 +31,11 @@ final class ZoomGestureController {
             self.previousPanPosition = nil
             self.closestCorner = nil
             quadView.resetHighlightedCornerViews()
+            quadView.isQuadMoving = false
             return
         }
+        
+        quadView.isQuadMoving = true
         
         let position = pan.location(in: quadView)
         

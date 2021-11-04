@@ -36,7 +36,7 @@ public final class EditImageViewController: UIViewController {
         imageView.isOpaque = true
         imageView.image = image
         imageView.backgroundColor = .clear
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

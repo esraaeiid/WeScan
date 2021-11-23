@@ -10,26 +10,29 @@ import UIKit
 import AVFoundation
 
 /// The `EditScanViewController` offers an interface for the user to edit the detected quadrilateral.
-final class EditScanViewController: UIViewController {
+public final class EditScanViewController: UIViewController {
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.clipsToBounds = true
         imageView.isOpaque = true
         imageView.image = image
-        imageView.backgroundColor = .black
+        imageView.backgroundColor = .clear
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    private lazy var quadView: QuadrilateralView = {
+     private lazy var quadView: QuadrilateralView = {
         let quadView = QuadrilateralView()
         quadView.editable = true
         quadView.translatesAutoresizingMaskIntoConstraints = false
         return quadView
     }()
     
+    public var isQuadMoved: Bool {
+        return quadView.isQuadDragged
+    }
     private lazy var nextButton: UIBarButtonItem = {
         let title = NSLocalizedString("wescan.edit.button.next", tableName: nil, bundle: Bundle(for: EditScanViewController.self), value: "Done", comment: "A generic next button")
         let button = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(pushReviewController))
@@ -48,7 +51,7 @@ final class EditScanViewController: UIViewController {
     private let image: UIImage
     
     /// The detected quadrilateral that can be edited by the user. Uses the image's coordinates.
-    private var quad: Quadrilateral
+    public var quad: Quadrilateral
     
     private var zoomGestureController: ZoomGestureController!
     
@@ -57,7 +60,7 @@ final class EditScanViewController: UIViewController {
     
     // MARK: - Life Cycle
     
-    init(image: UIImage, quad: Quadrilateral?, rotateImage: Bool = true) {
+    public init(image: UIImage, quad: Quadrilateral?, rotateImage: Bool = true) {
         self.image = rotateImage ? image.applyingPortraitOrientation() : image
         self.quad = quad ?? EditScanViewController.defaultQuad(forImage: image)
         super.init(nibName: nil, bundle: nil)
@@ -67,6 +70,7 @@ final class EditScanViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+
     override public func viewDidLoad() {
         super.viewDidLoad()
         
@@ -82,11 +86,16 @@ final class EditScanViewController: UIViewController {
         }
         
         zoomGestureController = ZoomGestureController(image: image, quadView: quadView)
-        
+        addLongGesture()
+    }
+    
+    private func addLongGesture() {
         let touchDown = UILongPressGestureRecognizer(target: zoomGestureController, action: #selector(zoomGestureController.handle(pan:)))
+        
         touchDown.minimumPressDuration = 0
         view.addGestureRecognizer(touchDown)
     }
+    
     
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -129,7 +138,8 @@ final class EditScanViewController: UIViewController {
         
         NSLayoutConstraint.activate(quadViewConstraints + imageViewConstraints)
     }
-    
+
+        
     // MARK: - Actions
     @objc func cancelButtonTapped() {
         if let imageScannerController = navigationController as? ImageScannerController {
@@ -138,20 +148,34 @@ final class EditScanViewController: UIViewController {
     }
     
     @objc func pushReviewController() {
+        let results = cropImage()
+        guard let results = results else {
+            return
+        }
+
+        let reviewViewController = ReviewViewController.init(results: results)
+        navigationController?.pushViewController(reviewViewController, animated: true)
+    }
+    
+   public func cropImage()  ->  ImageScannerResults? {
+        // Cropped Image
+        
         guard let quad = quadView.quad,
             let ciImage = CIImage(image: image) else {
                 if let imageScannerController = navigationController as? ImageScannerController {
                     let error = ImageScannerControllerError.ciImageCreation
-                    imageScannerController.imageScannerDelegate?.imageScannerController(imageScannerController, didFailWithError: error)
+                    imageScannerController.imageScannerDelegate?.imageScannerController(imageScannerController,
+                                                                                        didFailWithError: error)
                 }
-                return
+                return nil
         }
         let cgOrientation = CGImagePropertyOrientation(image.imageOrientation)
         let orientedImage = ciImage.oriented(forExifOrientation: Int32(cgOrientation.rawValue))
         let scaledQuad = quad.scale(quadView.bounds.size, image.size)
         self.quad = scaledQuad
         
-        // Cropped Image
+
+        
         var cartesianScaledQuad = scaledQuad.toCartesian(withHeight: image.size.height)
         cartesianScaledQuad.reorganize()
         
@@ -168,9 +192,10 @@ final class EditScanViewController: UIViewController {
         let enhancedScan = enhancedImage.flatMap { ImageScannerScan(image: $0) }
         
         let results = ImageScannerResults(detectedRectangle: scaledQuad, originalScan: ImageScannerScan(image: image), croppedScan: ImageScannerScan(image: croppedImage), enhancedScan: enhancedScan)
-        
-        let reviewViewController = ReviewViewController(results: results)
-        navigationController?.pushViewController(reviewViewController, animated: true)
+               
+       
+       
+        return results
     }
     
     private func displayQuad() {

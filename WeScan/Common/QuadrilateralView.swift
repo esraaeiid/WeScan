@@ -28,9 +28,11 @@ final class QuadrilateralView: UIView {
         }
     }
     
+    var isQuadDragged: Bool = false
+    
     private let quadLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
-        layer.strokeColor = UIColor.white.cgColor
+        layer.strokeColor = UIColor.init(red: 245 / 255, green: 245 / 255, blue: 245 / 255, alpha: 1).cgColor
         layer.lineWidth = 3.0
         layer.opacity = 1.0
         layer.isHidden = true
@@ -64,7 +66,7 @@ final class QuadrilateralView: UIView {
     /// Set stroke color of image rect and corner.
     public var strokeColor: CGColor? {
         didSet {
-            quadLayer.strokeColor = strokeColor
+            quadLayer.strokeColor = UIColor.green.cgColor
             topLeftCornerView.strokeColor = strokeColor
             topRightCornerView.strokeColor = strokeColor
             bottomRightCornerView.strokeColor = strokeColor
@@ -166,14 +168,35 @@ final class QuadrilateralView: UIView {
     
     private func drawQuad(_ quad: Quadrilateral, animated: Bool) {
         var path = quad.path
+        let handlerHeight: CGFloat = 22
+        let handlerWidth: CGFloat = 11
         
+        let adjacent = CGPoint.init(x: quad.topRight.x, y: quad.topLeft.y).distanceTo(point: quad.topLeft)
+        let opposite = CGPoint.init(x: quad.topRight.x, y: quad.topLeft.y).distanceTo(point: quad.topRight)
+        let angle = atan(adjacent / opposite)
+        
+        
+        var midPoint = quad.topRight.midBetween(otherPoint: quad.topLeft)
+        midPoint.y = midPoint.y - 11
+    
+        
+        
+        let rectPath = UIBezierPath(roundedRect:.init(origin: midPoint, size: .init(width: handlerWidth, height: handlerHeight)),
+                      byRoundingCorners: .allCorners,
+                            cornerRadii: CGSize(width: 6.0, height: 6.0))
+       // rectPath.rotateAroundCenter(angle: -angle)
+
+ 
+        
+       // path.append(rectPath)
         if editable {
             isQuadMoving = false
             path = path.reversing()
-            let rectPath = UIBezierPath(rect: CGRect(x: bounds.minX - 10,
-                                                     y: bounds.minY - 100,
-                                                     width: bounds.width + 100,
-                                                     height: bounds.height + 200))
+            let rectPath = UIBezierPath(rect: CGRect(x: bounds.minX - 0,
+                                                     y: bounds.minY - 0,
+                                                     width: bounds.width + 0,
+                                                     height: bounds.height + 0))
+
             path.append(rectPath)
         }
      

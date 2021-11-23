@@ -36,6 +36,7 @@ final class ZoomGestureController {
         }
         
         quadView.isQuadMoving = true
+        quadView.isQuadDragged = true
         
         let position = pan.location(in: quadView)
         
